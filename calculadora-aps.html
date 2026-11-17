@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calculadora APS – Adalberto Zauli</title>
+<!-- Para "Adicionar à Tela de Início" no celular (ícone, nome e cor do app).
+     Só têm efeito quando a página é aberta pelo site; abrindo o arquivo no computador, são ignorados. -->
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Calc APS">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b5ed7">
 
 <!--
   CALCULADORA CLÍNICA – ATENÇÃO PRIMÁRIA
@@ -1728,6 +1735,23 @@ document.querySelectorAll(".btn-limpar").forEach(function (botao) {
 });
 
 abrirAba("imc");
+
+/* ---------------- Modo offline (só quando aberto pelo site) ----------------
+   No site (https://...), liga o "manifesto" (nome/ícone do app) e o arquivo sw.js,
+   que guarda uma cópia da calculadora no celular para funcionar sem internet.
+   Abrindo o arquivo direto no computador (file://), nada disso roda – e não precisa. */
+if (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+  const linkManifesto = document.createElement("link");
+  linkManifesto.rel = "manifest";
+  linkManifesto.href = "manifest.webmanifest";
+  document.head.appendChild(linkManifesto);
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function () {
+      // Se não conseguir, a calculadora continua funcionando normalmente (só sem offline)
+    });
+  }
+}
 </script>
 </body>
 </html>

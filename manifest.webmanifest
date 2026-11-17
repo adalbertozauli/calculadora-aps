@@ -1,0 +1,16 @@
+{
+  "name": "Calculadora APS",
+  "short_name": "Calc APS",
+  "description": "Calculadoras médicas para Atenção Primária à Saúde: IMC, IG/DPP, TFGe e dose pediátrica.",
+  "lang": "pt-BR",
+  "start_url": "calculadora-aps.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eaf5fd",
+  "theme_color": "#0b5ed7",
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -752,36 +752,16 @@
   <main>
     <!-- ===== Controle segmentado (data-aba = id do painel) ===== -->
     <div class="abas" role="tablist" aria-label="Calculadoras">
-      <button class="aba" role="tab" id="aba-imc"  data-aba="imc"  aria-controls="painel-imc"><svg class="icone" aria-hidden="true"><use href="#i-imc"/></svg>IMC</button>
       <button class="aba" role="tab" id="aba-ig"   data-aba="ig"   aria-controls="painel-ig"><svg class="icone" aria-hidden="true"><use href="#i-cal"/></svg>IG / DPP</button>
       <button class="aba" role="tab" id="aba-tfg"  data-aba="tfg"  aria-controls="painel-tfg"><svg class="icone" aria-hidden="true"><use href="#i-rim"/></svg>TFGe</button>
       <button class="aba" role="tab" id="aba-dose" data-aba="dose" aria-controls="painel-dose"><svg class="icone" aria-hidden="true"><use href="#i-pilula"/></svg>Dose ped.</button>
+      <button class="aba" role="tab" id="aba-imc"  data-aba="imc"  aria-controls="painel-imc"><svg class="icone" aria-hidden="true"><use href="#i-imc"/></svg>IMC</button>
     </div>
 
     <div style="height: clamp(12px, 2vw, 18px)"></div>
 
-    <!-- ================= ABA 1: IMC ================= -->
-    <form class="painel vidro" id="painel-imc" role="tabpanel" aria-labelledby="aba-imc" autocomplete="off">
-      <div class="linha">
-        <div class="campo">
-          <label for="imc-peso"><svg class="icone" aria-hidden="true"><use href="#i-peso"/></svg>Peso (kg)</label>
-          <input id="imc-peso" type="text" inputmode="decimal" placeholder="ex.: 70,5">
-        </div>
-        <div class="campo">
-          <label for="imc-altura"><svg class="icone" aria-hidden="true"><use href="#i-regua"/></svg>Altura (m ou cm)</label>
-          <input id="imc-altura" type="text" inputmode="decimal" placeholder="1,75 ou 175">
-        </div>
-      </div>
-      <div class="resultado" id="res-imc" aria-live="polite"></div>
-      <div class="avisos" id="avisos-imc"></div>
-      <div class="botoes">
-        <button type="button" class="btn-copiar" data-aba="imc"><svg class="icone" aria-hidden="true"><use href="#i-copiar"/></svg><span class="rotulo">Copiar</span></button>
-        <button type="button" class="btn-limpar" data-aba="imc"><svg class="icone" aria-hidden="true"><use href="#i-limpar"/></svg>Limpar</button>
-      </div>
-    </form>
-
-    <!-- ================= ABA 2: IG / DPP ================= -->
-    <form class="painel vidro" id="painel-ig" role="tabpanel" aria-labelledby="aba-ig" autocomplete="off" hidden>
+    <!-- ================= ABA 1: IG / DPP ================= -->
+    <form class="painel vidro" id="painel-ig" role="tabpanel" aria-labelledby="aba-ig" autocomplete="off">
       <fieldset class="modo">
         <legend class="so-leitor">Calcular por</legend>
         <label><input type="radio" name="ig-modo" value="dum" checked><span>Pela DUM</span></label>
@@ -830,7 +810,7 @@
       <div id="extra-ig"></div>
     </form>
 
-    <!-- ================= ABA 3: TFGe ================= -->
+    <!-- ================= ABA 2: TFGe ================= -->
     <form class="painel vidro" id="painel-tfg" role="tabpanel" aria-labelledby="aba-tfg" autocomplete="off" hidden>
       <div class="campo">
         <label for="tfg-cr"><svg class="icone" aria-hidden="true"><use href="#i-gota"/></svg>Creatinina sérica (mg/dL)</label>
@@ -864,7 +844,7 @@
       </div>
     </form>
 
-    <!-- ================= ABA 4: Dose pediátrica ================= -->
+    <!-- ================= ABA 3: Dose pediátrica ================= -->
     <form class="painel vidro" id="painel-dose" role="tabpanel" aria-labelledby="aba-dose" autocomplete="off" hidden>
       <div class="linha">
         <div class="campo">
@@ -896,6 +876,26 @@
       <div class="botoes">
         <button type="button" class="btn-copiar" data-aba="dose"><svg class="icone" aria-hidden="true"><use href="#i-copiar"/></svg><span class="rotulo">Copiar</span></button>
         <button type="button" class="btn-limpar" data-aba="dose"><svg class="icone" aria-hidden="true"><use href="#i-limpar"/></svg>Limpar</button>
+      </div>
+    </form>
+
+    <!-- ================= ABA 4: IMC ================= -->
+    <form class="painel vidro" id="painel-imc" role="tabpanel" aria-labelledby="aba-imc" autocomplete="off" hidden>
+      <div class="linha">
+        <div class="campo">
+          <label for="imc-peso"><svg class="icone" aria-hidden="true"><use href="#i-peso"/></svg>Peso (kg)</label>
+          <input id="imc-peso" type="text" inputmode="decimal" placeholder="ex.: 70,5">
+        </div>
+        <div class="campo">
+          <label for="imc-altura"><svg class="icone" aria-hidden="true"><use href="#i-regua"/></svg>Altura (m ou cm)</label>
+          <input id="imc-altura" type="text" inputmode="decimal" placeholder="1,75 ou 175">
+        </div>
+      </div>
+      <div class="resultado" id="res-imc" aria-live="polite"></div>
+      <div class="avisos" id="avisos-imc"></div>
+      <div class="botoes">
+        <button type="button" class="btn-copiar" data-aba="imc"><svg class="icone" aria-hidden="true"><use href="#i-copiar"/></svg><span class="rotulo">Copiar</span></button>
+        <button type="button" class="btn-limpar" data-aba="imc"><svg class="icone" aria-hidden="true"><use href="#i-limpar"/></svg>Limpar</button>
       </div>
     </form>
   </main>
@@ -1499,10 +1499,10 @@ function atualizarDose() {
    atualizarXXX e inclua aqui.
    ----------------------------------------------------------------------- */
 const CALCULADORAS = {
-  imc:  atualizarIMC,
   ig:   atualizarIG,
   tfg:  atualizarTFG,
-  dose: atualizarDose
+  dose: atualizarDose,
+  imc:  atualizarIMC
 };
 
 // Texto que o botão "Copiar" de cada aba vai copiar
@@ -1744,7 +1744,7 @@ document.querySelectorAll(".btn-limpar").forEach(function (botao) {
   });
 });
 
-abrirAba("imc");
+abrirAba("ig");   // aba que abre primeiro
 
 /* ---------------- Modo offline (só quando aberto pelo site) ----------------
    No site (https://...), liga o "manifesto" (nome/ícone do app) e o arquivo sw.js,

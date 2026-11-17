@@ -1626,14 +1626,28 @@ function abrirAba(aba, focarCampo) {
 
 // Máscara de data: enquanto digita, só aceita números e põe as barras sozinho.
 // "01012026" vira "01/01/2026". Também funciona ao colar "01-01-2026".
-function aplicarMascaraData(input) {
+function aplicarMascaraData(input, evento) {
   const texto = input.value;
   // Quantos dígitos existem antes do cursor (para devolver o cursor ao mesmo lugar)
   const cursor = input.selectionStart === null ? texto.length : input.selectionStart;
-  const digitosAntes = texto.slice(0, cursor).replace(/\D/g, "").length;
+  let digitosAntes = texto.slice(0, cursor).replace(/\D/g, "").length;
 
   // Fica só com os números (no máximo 8: ddmmaaaa) e coloca as barras
-  const d = texto.replace(/\D/g, "").slice(0, 8);
+  let d = texto.replace(/\D/g, "").slice(0, 8);
+
+  // Ano com 2 dígitos: completa para 20AA assim que o 2º dígito do ano é digitado
+  // (ex.: 01/01/26 → 01/01/2026). Só ao DIGITAR ou COLAR no fim (não ao apagar ou
+  // editar no meio). "19" e "20" esperam, porque podem ser o começo de 2019/2026 etc.;
+  // esses completam ao sair do campo (ver completarAnoAoSair).
+  const digitando = !evento || !evento.inputType || evento.inputType.indexOf("insert") === 0;
+  if (digitando && d.length === 6 && digitosAntes === 6) {
+    const ano2 = d.slice(4, 6);
+    if (ano2 !== "19" && ano2 !== "20") {
+      d = d.slice(0, 4) + "20" + ano2;
+      digitosAntes = 8;
+    }
+  }
+
   let formatado = d.slice(0, 2);
   if (d.length > 2) formatado += "/" + d.slice(2, 4);
   if (d.length > 4) formatado += "/" + d.slice(4, 8);
@@ -1649,6 +1663,13 @@ function aplicarMascaraData(input) {
   if (document.activeElement === input) input.setSelectionRange(pos, pos);
 }
 
+// Ao sair do campo com ano de 2 dígitos (ex.: "01/01/20"), completa para 20AA ("01/01/2020")
+function completarAnoAoSair(input) {
+  const d = input.value.replace(/\D/g, "");
+  if (d.length !== 6) return;
+  input.value = d.slice(0, 2) + "/" + d.slice(2, 4) + "/20" + d.slice(4, 6);
+}
+
 /* ---------------- Ligações (executadas ao abrir a página) ---------------- */
 
 // Data de referência começa com hoje. defaultValue faz o "Limpar" voltar para hoje.
@@ -1657,9 +1678,13 @@ document.getElementById("ig-ref").defaultValue = formatarData(hoje());
 // Liga a máscara em todos os campos marcados com data-mascara="data".
 // (Roda antes do cálculo, porque o evento chega primeiro ao campo e depois ao formulário.)
 document.querySelectorAll('input[data-mascara="data"]').forEach(function (campo) {
-  campo.addEventListener("input", function () { aplicarMascaraData(campo); });
-  // Ao sair do campo, recalcula para mostrar o aviso se a data ficou incompleta
-  campo.addEventListener("blur", function () { mostrar(campo.form.id.replace("painel-", "")); });
+  campo.addEventListener("input", function (evento) { aplicarMascaraData(campo, evento); });
+  // Ao sair do campo: completa ano de 2 dígitos e recalcula
+  // (mostra o aviso se a data ficou incompleta)
+  campo.addEventListener("blur", function () {
+    completarAnoAoSair(campo);
+    mostrar(campo.form.id.replace("painel-", ""));
+  });
 });
 
 const botoesAba = Array.from(document.querySelectorAll(".aba"));
